@@ -1,0 +1,114 @@
+<html>
+	<head>		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<style>
+			.item-selected-color {
+				background-color: lightblue;
+			}
+
+			.item-unselected-color {
+				background-color: white;
+			}
+
+			.item-text {
+				text-align: left;
+				vertical-align: top;
+			}
+		</style>
+		<script type="text/javascript">
+			$(function () {
+				//alert("aa");
+				var jsonObj = [{ value: 1, text: "原因1" }, { value: 2, text: "原因2" }, { value: 3, text: "原因3" },
+								{ value: 4, text: "原因4" }, { value: 5, text: "原因5" }, { value: 6, text: "原因6" }];
+
+				initCheckboxList("chkLstBackReasonsSpecial", jsonObj);
+
+			});
+			function findSelectChildren(elementID) {
+				var obj = $('#'+elementID);
+
+				var othObj = obj.children("div.item-selected-color");
+				return othObj;
+			}
+				
+			function getUserCheckedReasonsText(elementID) {
+				try {
+					var items = findSelectChildren(elementID);
+					if (items == null ||
+						items.length == 0) {
+						return "";
+					}
+
+					var reqText = "";
+					$.each(items, function (i, item) {
+						if (item.children[0].checked) {
+							reqText += item.children[1].innerText + "|";
+						}
+					});
+
+					return reqText;
+				}
+				catch (e) {
+					alert("error:" + e.message);
+					return "";
+				}
+			}
+
+			function getUserCheckedReasonsValue(elementID) {
+				try {
+					var items = findSelectChildren(elementID);
+					if (items == null ||
+						items.length == 0) {
+						return "";
+					}
+
+					var reqText = "";
+					$.each(items, function (i, item) {
+						if (item.children[0].checked) {
+							reqText += item.children[0].value + "|";
+						}
+					});
+
+					return reqText;
+				}
+				catch (e) {
+					alert("error:" + e.message);
+					return "";
+				}
+			}
+
+			//
+			//source:[{value:"",text:""},{value:"",text:""},....]
+			function initCheckboxList(elementID, source) {
+				if (source) {
+					var tmpInnerHTML = "";
+					for (var i = 0; i < source.length; i++) {
+						var tmpEl = "<div>"
+										+ "<input type='checkbox'"
+											+ " onclick=\"this.checked ? $(this).parent().attr(\'class\', \'item-selected-color\') : $(this).parent().attr(\'class\', \'item-unselected-color\')\""
+											+ " value=\"" + source[i].value + "\""
+											+ "/>"
+										+ "<label class=\"item-text\">"
+											+ source[i].text
+										+ "</label>"
+								  + "</div>";
+
+						tmpInnerHTML += tmpEl;
+					}
+
+					var chkLstObj = document.getElementById(elementID);
+					chkLstObj.innerHTML = tmpInnerHTML
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div id="chkLstBackReasonsSpecial" style="border: solid; border-width: thin; overflow: auto; height: 80px;">
+		</div>
+		
+		<div>
+			<input id="btnGetText" type="button" value="Get Text" onclick="alert(getUserCheckedReasonsText('chkLstBackReasonsSpecial'));"/>
+			<input id="btnGetValue" type="button" value="Get Value" onclick="alert(getUserCheckedReasonsValue('chkLstBackReasonsSpecial'));"/>
+		</div>
+	</body>
+</html>
